@@ -1,12 +1,8 @@
 <template>
     <v-container grid-list-md>
+        <Breadcrumb></Breadcrumb>
         <v-card>
             <v-card-title>
-                <!-- <label>Data Sources</label> -->
-                <!-- <v-header><h3>Data Sources</h3></v-header>
-                <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
-                <v-spacer></v-spacer>
-                <v-btn color="info"><v-icon>add</v-icon>Add </v-btn> -->
                 <v-layout row wrap justify-start>
                     <v-flex xs2>
                      <h3>Data Sources</h3>   
@@ -18,16 +14,6 @@
                         </v-tooltip>
                     </v-flex>
                     <v-flex xs2>
-                         <!-- <v-tooltip bottom>
-      <v-btn
-
-        color="primary"
-        dark
-      >
-        Button
-      </v-btn>
-      <span>Tooltip</span>
-    </v-tooltip> -->
                         <v-tooltip bottom>
                         <v-btn slot="activator" @click="addDataSource" color="info" right>
                              Add 
@@ -39,12 +25,24 @@
             </v-card-title>
             <v-data-table :headers="headers" :items="desserts" :search="search">
                 <template slot="items" slot-scope="props">
-                    <td>{{ props.item.name }}</td>
-                    <td class="text-xs-right">{{ props.item.calories }}</td>
-                    <td class="text-xs-right">{{ props.item.fat }}</td>
-                    <td class="text-xs-right">{{ props.item.carbs }}</td>
-                    <td class="text-xs-right">{{ props.item.protein }}</td>
-                    <td class="text-xs-right">{{ props.item.iron }}</td>
+                    <td class="text-xs-left">{{ props.item.datasource_info.datasource_name }}</td>
+                    <td class="text-xs-left">{{ props.item.datasource_info.datasource_type }}</td>
+                    <td class="text-xs-left">{{ props.item.datasource_info.datasource_property }}</td>
+                    <td class="text-xs-left">{{ props.item.datasource_info.database_type}}</td>
+                    <td class="text-xs-left">
+                        <v-tooltip bottom>
+                            <v-icon slot="activator" class="iconFormat">fa-copy</v-icon>
+                            <span>Copy</span>
+                        </v-tooltip>
+                         <v-tooltip bottom>
+                            <v-icon slot="activator" class="iconFormat">fa-edit</v-icon>
+                            <span>Edit</span>
+                        </v-tooltip>
+                         <v-tooltip bottom>
+                            <v-icon slot="activator" class="iconFormat">fa-trash-alt</v-icon>
+                            <span>Delete</span>
+                        </v-tooltip>
+                    </td>
                 </template>
                 <v-alert slot="no-results" :value="true" color="error" icon="warning">
                     Your search for "{{ search }}" found no results.
@@ -55,125 +53,36 @@
 </template>
 <script>
 import { post as postToServer } from './../../methods/serverCall.js';
+import datasourcelist from '../../data/dataSourceList.js';
+import Breadcrumb from "../Breadcrumbs.vue"
   export default {
     name: "datasourcelist",
+    components: {
+         Breadcrumb
+      },
     data () {
       return {
         search: '',
         headers: [
           {
-            text: 'Dessert (100g serving)',
+            text: 'Datasource Name',
             align: 'left',
-            sortable: false,
-            value: 'name'
+            // sortable: false,
+            value: 'datasource_info.datasource_name'
           },
-          { text: 'Calories', value: 'calories' },
-          { text: 'Fat (g)', value: 'fat' },
-          { text: 'Carbs (g)', value: 'carbs' },
-          { text: 'Protein (g)', value: 'protein' },
-          { text: 'Iron (%)', value: 'iron' }
+          { text: 'Datasource Type', value: 'datasource_info.datasource_type' },
+          { text: 'Datasource Property', value: 'datasource_info.datasource_property' },
+          { text: 'Database Type', value: 'datasource_info.database_type' },
+          { text: 'Action',sortable: false},
+         
         ],
-        desserts: [
-          {
-            value: false,
-            name: 'Frozen Yogurt',
-            calories: 159,
-            fat: 6.0,
-            carbs: 24,
-            protein: 4.0,
-            iron: '1%'
-          },
-          {
-            value: false,
-            name: 'Ice cream sandwich',
-            calories: 237,
-            fat: 9.0,
-            carbs: 37,
-            protein: 4.3,
-            iron: '1%'
-          },
-          {
-            value: false,
-            name: 'Eclair',
-            calories: 262,
-            fat: 16.0,
-            carbs: 23,
-            protein: 6.0,
-            iron: '7%'
-          },
-          {
-            value: false,
-            name: 'Cupcake',
-            calories: 305,
-            fat: 3.7,
-            carbs: 67,
-            protein: 4.3,
-            iron: '8%'
-          },
-          {
-            value: false,
-            name: 'Gingerbread',
-            calories: 356,
-            fat: 16.0,
-            carbs: 49,
-            protein: 3.9,
-            iron: '16%'
-          },
-          {
-            value: false,
-            name: 'Jelly bean',
-            calories: 375,
-            fat: 0.0,
-            carbs: 94,
-            protein: 0.0,
-            iron: '0%'
-          },
-          {
-            value: false,
-            name: 'Lollipop',
-            calories: 392,
-            fat: 0.2,
-            carbs: 98,
-            protein: 0,
-            iron: '2%'
-          },
-          {
-            value: false,
-            name: 'Honeycomb',
-            calories: 408,
-            fat: 3.2,
-            carbs: 87,
-            protein: 6.5,
-            iron: '45%'
-          },
-          {
-            value: false,
-            name: 'Donut',
-            calories: 452,
-            fat: 25.0,
-            carbs: 51,
-            protein: 4.9,
-            iron: '22%'
-          },
-          {
-            value: false,
-            name: 'KitKat',
-            calories: 518,
-            fat: 26.0,
-            carbs: 65,
-            protein: 7,
-            iron: '6%'
-          }
-        ]
+        desserts: datasourcelist,
       }
     },
     mounted() {
-      this.getDataSourceList();
+      // this.getDataSourceList();
     },
     methods: {
-      getDataSourceList(){
-
-      },
       addDataSource(event){
         let _this = this;
           _this.$router.push('/createdatasource');
@@ -182,3 +91,10 @@ import { post as postToServer } from './../../methods/serverCall.js';
     }
   }
 </script>
+<style>
+.iconFormat{
+    margin-right: 5px;
+    cursor: pointer;
+}
+</style>
+

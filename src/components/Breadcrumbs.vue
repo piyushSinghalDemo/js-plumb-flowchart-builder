@@ -1,12 +1,17 @@
 <template>
 	<div>
-		<ul class="breadcrumb">
-			<li v-for="route in breadcrumbsList">
-				<router-link :to="{name: route.name}">
-					{{ route.value }}
-				</router-link>
-			</li>
-		</ul>
+	<v-layout row>
+		<v-flex xs12>
+			<!-- <v-spacer></v-spacer> -->
+			<ul class="breadcrumb">
+				<li v-for="(route, index) in breadcrumbsList" :key="index">
+					<router-link :to="{name: route.name}">
+						{{route.value}}
+					</router-link>
+				</li>
+			</ul>
+		</v-flex>
+	</v-layout>	
 	</div>
 </template>
 
@@ -23,7 +28,7 @@
 	 	},
 	 	methods: {
 	 		CreateBreadCrump() {
-				 debugger;
+				//  debugger;
 	 			// console.log(this.$session.get('access_token'))
 	 			var breadcrumbsstring = this.$breadcrumbs[0].meta['breadcrumb']
 	 			var crump = breadcrumbsstring.split('/')
@@ -39,8 +44,23 @@
 	 					'value': crump[i]
 	 				}
 	 				this.breadcrumbsList.push(json)
-	 			}
+				 }
+				//  debugger;
+				//  console.log("breadcrumbsList" +JSON.stringify(this.breadcrumbsList));
 	 		}
 	 	}
 	 }
 </script>
+<style>
+.breadcrumb > li + li:before {
+    padding: 0 5px;
+    color: #ccc;
+    content: "/\A0";
+	/* background-color: white */
+}
+.breadcrumb{
+	background-color: inherit !important;
+	padding: 0px !important;
+	margin: 0px !important;
+}
+</style>

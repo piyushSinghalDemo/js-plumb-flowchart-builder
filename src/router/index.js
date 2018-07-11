@@ -27,7 +27,7 @@ export default new Router({
         name: 'createdatasource',
         component: newDatasource,
         meta: {
-            breadcrumb: 'Home / Create Datasource'
+            breadcrumb: 'Home / Datasource List / Create Datasource'
         }
     }]
 })

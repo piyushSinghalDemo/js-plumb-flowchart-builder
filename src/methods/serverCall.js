@@ -7,7 +7,9 @@ export function get(that, endPoint) {
         'Content-Type': 'application/json'
     }
     return new Promise(function(resolve, reject) {
-        that.$http.get(endPoint, { headers: headerData }).then(response => {
+        that.$http.get(endPoint, {
+            headers: headerData
+        }).then(response => {
             return resolve(response.body)
         }, response => {
             return reject(response.body)
@@ -24,7 +26,9 @@ export function post(that, endPoint, InputJson) {
         'Content-Type': 'application/json'
     }
     return new Promise(function(resolve, reject) {
-        that.$http.post(endPoint, InputJson, { headers: headerData }, ).then(response => {
+        that.$http.post(endPoint, InputJson, {
+            headers: headerData
+        }, ).then(response => {
             return resolve(response.body)
         }, response => {
             return reject(response.body)
