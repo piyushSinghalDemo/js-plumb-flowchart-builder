@@ -15,9 +15,10 @@
                     </v-flex>
                     <v-flex xs2>
                         <v-tooltip bottom>
-                        <v-btn slot="activator" @click="addDataSource" color="info" right>
+                         <v-btn slot="activator" @click="addDataSource" color="info" right>
                              Add 
-                        </v-btn>
+                        </v-btn> 
+                        <!-- <b-button slot="activator" :size="'lg'" :variant="'outline-primary'"> Add </b-button> -->
                         <span>Add New DataSource</span>
                         </v-tooltip>
                     </v-flex>

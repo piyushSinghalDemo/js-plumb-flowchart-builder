@@ -5,11 +5,13 @@
     "scripts": {
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build",
-        "lint": "vue-cli-service lint"
+        "lint": "vue-cli-service lint",
+        "lintFix": "eslint --ext .* ./ --fix"
     },
     "dependencies": {
         "bootstrap-vue": "^2.0.0-rc.11",
         "jquery": "^3.3.1",
+        "jsplumb": "^2.7.13",
         "vue": "^2.5.16",
         "vue-breadcrumbs": "^1.1.2",
         "vue-resource": "^1.5.1",

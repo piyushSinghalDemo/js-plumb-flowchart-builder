@@ -12,6 +12,11 @@
         <v-content style="margin-top:6%">
           <v-container class="background">
             <router-view ></router-view>      
+            <!-- <h1>Template Added</h1>
+               <div id="diagramContainer">
+                    <div id="item_left" class="item"></div>
+                    <div id="item_right" class="item" style="margin-left:50px;"></div>
+                </div> -->
           </v-container>
         </v-content>
       </v-app>
@@ -27,15 +32,46 @@ export default {
   name: 'app',
   components: {
     // HelloWorld,
-    'customHeader':customHeader
-  }
+    'customHeader': customHeader
+  },
+  mounted() {
+    // setTimeout(()=>{
+    //   this.initilzeJsPlumb();
+    // },4000);
+  },
+  methods: {
+    initilzeJsPlumb() {
+      jsPlumb.ready(function () {
+        jsPlumb.setContainer("diagramContainer");
+
+        var common = {
+          isSource: true,
+          isTarget: true,
+          connector: ["Straight"]
+        };
+
+        jsPlumb.addEndpoint("item_left", {
+          anchors: ["Right"]
+        }, common);
+
+        jsPlumb.addEndpoint("item_right", {
+          anchor: "Left"
+        }, common);
+
+        jsPlumb.addEndpoint("item_right", {
+          anchor: "Right"
+        }, common);
+      });
+    },
+  },
 }
 </script>
 
 <style>
-a{
-  color:inherit !important;
+a {
+  color: inherit !important;
 }
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -43,5 +79,19 @@ a{
   text-align: center;
   color: #2c3e50;
   /* margin-top: 60px; */
+}
+
+#diagramContainer {
+  padding: 20px;
+  width: 80%;
+  height: 150px;
+  border: 1px solid gray;
+}
+
+.item {
+  height: 80px;
+  width: 80px;
+  border: 1px solid blue;
+  float: left;
 }
 </style>
