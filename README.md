@@ -7,7 +7,7 @@ This Project is in vue-cli-3
  npm install
  @last 
  
- npm run serve(It will run task on 8082 serveer make sure your system 8082 port is free)
+ npm run serve(It will run task on 8082 server make sure your system 8082 port is free)
  
  It keeps flowchart builder with drag and drop component
  
