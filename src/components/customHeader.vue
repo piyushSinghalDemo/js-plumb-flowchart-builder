@@ -27,7 +27,8 @@
           <b-nav-item class="pl-10 br-bottom">
             <div class="pd-5 mr-l-50">
               <i class="fab fa-accusoft" style="display:block;font-size:20px"></i>
-              <span>Archive</span> 
+              <!-- <span>Archive</span>  -->
+              <router-link to="/drag" class="btn btn-success">drag</router-link>
             </div>
           </b-nav-item>
           <b-nav-item class="pl-10">

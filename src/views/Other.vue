@@ -1,61 +1,141 @@
 <template>
-  <div class="panel-body points demo flow_chart" id="points">
+  <div class="job-Details">
+     <!-- these all changes that jsplumb is working with drag and drop
+      in essentio project(edc-portal) -->
+    <BreadCrumbs></BreadCrumbs>
+    <div style="display:none;position:absolute;top:50%;left:35%;padding:2px;" id="loadingSpinner" class="progress-overlay pad45A float_center"
+      v-cloak>
+      <img id="loadingSpinner" src="../../assets/images/spinner/loader-dark.gif" alt="">
+    </div>
+    <h2> Business Object </h2>
+    <div class="panel">
+      <div class="panel-body">
+        <div class="example-box-wrapper">
+          <div id="ShowMessages">
+            <div class="example-box-wrapper" v-if="ShowSuccessMessage">
+              <div class="alert alert-close alert-success">
+                <a href="#" title="Close" class="glyph-icon alert-close-btn icon-remove" v-on:click="MessageClosed('success')"></a>
+                <div class="bg-green alert-icon">
+                  <i class="glyph-icon icon-check"></i>
+                </div>
+                <div class="alert-content">
+                  <h4 class="alert-title">Success</h4>
+                  <p>{{sucessMessage}}</p>
+                </div>
+              </div>
+            </div>
+            <!-- Example box wrapper -->
+            <div class="alert alert-danger" v-if="ShowErrorMessage">
+              <a href="#" title="Close" class="glyph-icon alert-close-btn icon-remove" v-on:click="MessageClosed('error')"></a>
+              <div class="alert-content">
+                <p>{{ErrorMessage}}</p>
+              </div>
+            </div>
+          </div>
+          <!-- ShowMessage -->
+
+          <form enctype="multipart/form-data" class="form-horizontal bordered-row" autocomplete="off"
+            id="manageuser" novalidate>
+                <h1>Form Loaded</h1>
+                <div class="row clearfix">
+                    <div class="col-sm-4" style="min-height:400px;border:01px dashed">
+                        <div class="draggable newElement" id="new" style="display:inline-block;">
+                            <h5>Step</h5>
+                            <img src="../../assets/logo.png" alt="" height="40" width="40">
+                        </div>
+                    </div>
+                    <div class="col-sm-8" style="min-height:400px;border:01px dashed">
+                        <div id="droppable" class="droppable" style="margin-top:10px;">
+                                <div class="draggable ui-draggable ui-draggable-handle " id="step0" style="display: inline-block; position: absolute; left: 79.3438px; top: 96px;"><h5>Step</h5> 
+                                <img src="../../assets/logo.png" alt="" height="40" width="40">
+                                </div>
+                        </div>
+                    </div>
+                </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <simplert :useRadius="true" :useIcon="true" ref="simplert">
+    </simplert>
   </div>
 </template>
-
 <script>
-import $ from 'jquery';
-import { jsPlumb } from 'jsplumb';
+  import config from '../../config.json'
+  import Simplert from 'vue2-simplert'
+  import BreadCrumbs from '../Breadcrumbs.vue'
+  import sessionCheck from '../../methods/sessionCheck'
+  import inputObject from '../../methods/createBussinessObject.js'
+  import includes from 'lodash/includes';
+  import draggable from 'vuedraggable';
+  import { jsPlumb } from 'jsplumb';
+  import cloneDeep from 'lodash/cloneDeep'
+  export default {
+    components: {
+      BreadCrumbs,
+      Simplert,
+      draggable,
+    },
+    mounted() {
+      // sessionCheck(this);
+      // this.access_token = this.$session.get('access_token')
+      // this.client_id = this.$session.get('client_id')
+      // this.user_id = this.$session.get('user_id') 
+      let _this = this;
+      jsPlumb.ready(() => {
+        this.createFlow();
+        });
+        // let _this = this;
+       $(".draggable").draggable({
+            appendTo: '#droppable',
+            cursor: 'move',
+            helper: 'clone',
+            refreshPositions: true,
+        });
+         $("#droppable").droppable({
+            accept: ".draggable",
+            drop: function (event, ui) {
+                let base = 'step',
+                    compId = base + _this.index++;
 
-require('../assets/css/demo.css');
-require('../assets/css/jsplumb.css');
-
-export default {
-  name: 'Index',
-  data() {
-    return {
-      data: {
-        point: [
-          {
-            _id: '58c21d713819d56d68763918',
-            name: 'MoeLove-Other',
-            status: '0',
-          },
-          {
-            _id: '58c21d803819d56d68763919',
-            name: 'Moe',
-            status: '1',
-          },
-          {
-            _id: '58c21da83819d56d6876391a',
-            name: 'Love',
-            status: '0',
-          },
-          {
-            _id: '58c63ecf3819d5a22f2c7f24',
-            name: 'TaoBeier',
-            status: '1',
-          },
-        ],
-        location: [
-          ['Moe', 4, 14],
-          ['Love', 4, 24],
-          ['TaoBeier', 4, 34],
-          ['TaoBeier', 20, 24],
-          ['MoeLove', 4, 4],
-        ],
-        line: [
-          ['58c21d713819d56d68763918', '58c21d803819d56d68763919'],
-          ['58c21d803819d56d68763919', '58c21da83819d56d6876391a'],
-          ['58c21d803819d56d68763919', '58c63ecf3819d5a22f2c7f24'],
-          ['58c21da83819d56d6876391a', '58c63ecf3819d5a22f2c7f24'],
-        ],
-      },
-    };
-  },
-  methods: {
-    createFlow(flowData) {
-      console.log('Other created');
+                    if(! ui.helper.context.id == 'new')
+                      return;
+                      
+                if(ui.helper.context.id == 'new'){
+                    let object = ui.helper.clone().prop('id', compId);
+                    $("#droppable").append(object);
+                    _this.createFlow(compId);
+                }      
+            }
+        });
+      // this.getDatasourceList();
+    },
+    computed:{
+      
+    },
+    data() {
+      return {
+        index:1,
+        currentId:"",
+        parent_table:"",
+        child_table:"",
+        db_table_list:[],
+        day_array: [],
+        // parent_table_list:[],
+        // child_table_list:[],
+        ShowSuccessMessage: false,
+        ShowErrorMessage: false,
+        ErrorTitle: '',
+        ErrorMessage: '',
+        datasource_type: 'datasource',
+        ErrorMessageForDatasource: '',
+        ShowErrorMessageForSettings: false
+      }
+    },
+    methods: {
+    createFlow(tempId) {
+      this.currentId = tempId;
+      console.log('Index created');
       const color = '#acd';
       const instance = jsPlumb.getInstance({
         // notice the 'curviness' argument to this Bezier curve.
@@ -75,7 +155,7 @@ export default {
             length: 4,
             foldback: 0.8,
             paintStyle: {
-              lineWidth: 5,
+              lineWidth: 150,
               stroke: 'lightgray',
               fill: 'lightgray',
             },
@@ -86,6 +166,7 @@ export default {
 
       // suspend drawing and initialise.
       instance.batch(() => {
+          let _this = this;
         // declare some common values:
         const arrowCommon = { foldback: 0.7, width: 12 };
         // use three-arg spec to create two different arrows with the common values:
@@ -93,70 +174,56 @@ export default {
           ['Arrow', { location: 0.7 }, arrowCommon],
           ['Label', { label: 'custom label', id: 'label' }],
         ];
-        // init point
-        for (const point of flowData.point) {
-          $('.points').append(
-            `<div id="${point._id}" class="point chart_act_${point.status} ${point.name}">${point.name}</div>`,
-          );
+         $(document.body).find('.droppable').children('.draggable').map(function(index, object){
+                      debugger;
+                      console.log("index");
+                     let elementId = object.id || _this.currentId;
+                    //  $(this).attr('id',id+_this.index);
+                    instance.addEndpoint(elementId, {
+                        uuid: `${elementId}-bottom`,
+                        anchor: 'Bottom',
+                        //  scope:2,
+                        // detachable :true,
+                        maxConnections: -1,
+                        // connectorStyle: { stroke: 'green' },
+                    }, {
+                        isSource: true,
+                        isTarget: true,
+                        dragAllowedWhenFull: true,
+                    });
+                    instance.addEndpoint(elementId, {
+                        uuid: `${elementId}-top`,
+                        anchor: 'Top',
+                        //  scope:2,
+                        // detachable :true,
+                        maxConnections: -1,
+                        // connectorStyle: { stroke: 'gray' },
+                    }, {
+                        isSource: true,
+                        isTarget: true,
+                        dragAllowedWhenFull: true,
+                    });                    
+             instance.draggable(elementId);       
+        })
 
-          instance.addEndpoint(point._id, {
-            uuid: `${point._id}-bottom`,
-            anchor: 'Bottom',
-            // maxConnections: -1,
-            // connectorStyle: { stroke: 'green' },
-          }, {
-            isSource: true,
-            isTarget: true,
-            dragAllowedWhenFull: true,
-          });
-          instance.addEndpoint(point._id, {
-            uuid: `${point._id}-top`,
-            anchor: 'Top',
-            // maxConnections: -1,
-            // connectorStyle: { stroke: 'gray' },
-          }, {
-            isSource: true,
-            isTarget: true,
-            dragAllowedWhenFull: true,
-          });
-        }
-
-        // init transition
-        for (const i of flowData.line) {
-          const uuid = [`${i[0]}-bottom`, `${i[1]}-top`];
-          instance.connect({
-            uuids: uuid,
-            overlays,
-          });
-        }
-
-        // init location
-        for (const i of flowData.location) {
-          $(`.${i[0]}`).css('left', i[1] * 20);
-          $(`.${i[0]}`).css('top', i[2] * 20);
-        }
-
-        for (const point of flowData.point) {
-          instance.draggable(`${point._id}`);
-        }
+        instance.bind("click", function(conn) {
+          // alert(JSON.stringify(data));
+           instance.deleteConnection(conn);
+        });
+      
       });
-
-      jsPlumb.fire('jsPlumbDemoLoaded', instance);
     },
-  },
-  mounted() {
-    jsPlumb.ready(() => {
-      this.createFlow(this.data);
-    });
-  },
-};
+    },
+  }
 </script>
-
 <style>
-.point.chart_act_0 {
-  color: #9cc;
+#droppable {
+    height: 1000px;
+    width: 1986px;
+    overflow: auto;
 }
-.point.chart_act_1 {
-  color: #fac;
+svg.jtk-connector path {
+  /* stroke:red; */
+  stroke-width:5;
 }
 </style>

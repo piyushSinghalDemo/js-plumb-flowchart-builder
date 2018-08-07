@@ -5,12 +5,20 @@ import newDatasource from '../components/datasources/datasource.vue';
 import datasourcelist from '../components/datasources/datasourceList.vue'
 import Index from '../views/Index.vue'
 import Demo from '../views/demo.vue'
+import drag from '../views/drag.vue'
 
 Vue.use(Router);
 
 export default new Router({
     mode: 'history',
     routes: [{
+            path: '/drag',
+            name: 'drag',
+            component: drag,
+            meta: {
+                breadcrumb: 'Home / drag'
+            }
+        }, {
             path: '/Index',
             name: 'Index',
             component: Index,
