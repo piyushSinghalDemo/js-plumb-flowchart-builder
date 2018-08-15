@@ -6,21 +6,18 @@
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
     <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-    <customHeader></customHeader>
-    <div class="container">
-      <v-app style="background-color:white">
-        <v-content style="margin-top:6%">
+    <!-- <customHeader></customHeader> -->
+   <!-- <register></register> -->
+      <v-app>
+          <div class="" :style="{'background-image': 'url(' + backgroundImage + ')', 'background-size': '100% 100%','border-top': '4px solid red'}">
+          <register></register>
+        <!-- <v-content>
           <v-container class="background">
-            <router-view ></router-view>      
-            <!-- <h1>Template Added</h1>
-               <div id="diagramContainer">
-                    <div id="item_left" class="item"></div>
-                    <div id="item_right" class="item" style="margin-left:50px;"></div>
-                </div> -->
+              <router-view ></router-view>      
           </v-container>
-        </v-content>
+        </v-content> -->
+          </div> 
       </v-app>
-    </div>
 
   </div>
 </template>
@@ -28,41 +25,23 @@
 <script>
 // import HelloWorld from './components/HelloWorld.vue'
 import customHeader from './components/customHeader.vue'
+import Register from './components/authorization/register'
 export default {
   name: 'app',
+  data() {
+      return {
+        // backgroundImage: 'https://www.w3schools.com/images/lamp.jpg',
+        backgroundImage: require('./assets/images/LasVegas.jpg'),
+      }
+    },
   components: {
     // HelloWorld,
-    'customHeader': customHeader
+    'customHeader': customHeader,
+    'register':Register
   },
   mounted() {
-    // setTimeout(()=>{
-    //   this.initilzeJsPlumb();
-    // },4000);
   },
   methods: {
-    initilzeJsPlumb() {
-      jsPlumb.ready(function () {
-        jsPlumb.setContainer("diagramContainer");
-
-        var common = {
-          isSource: true,
-          isTarget: true,
-          connector: ["Straight"]
-        };
-
-        jsPlumb.addEndpoint("item_left", {
-          anchors: ["Right"]
-        }, common);
-
-        jsPlumb.addEndpoint("item_right", {
-          anchor: "Left"
-        }, common);
-
-        jsPlumb.addEndpoint("item_right", {
-          anchor: "Right"
-        }, common);
-      });
-    },
   },
 }
 </script>
